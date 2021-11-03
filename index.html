@@ -6,7 +6,7 @@
     <!-- displays site properly based on user's device -->
     
     <link rel="stylesheet" href="style.css">
-
+    <script src="script.js"></script>
     <script src="https://kit.fontawesome.com/1e3c7d6228.js" crossorigin="anonymous"></script>
 
     <link
@@ -30,7 +30,7 @@
         <button onclick="toggleTheme()"><div class="sun"></div></button>
       </header>
       <form>
-        <input class="add-task-input" placeholder="Add todo" />
+        <input class="add-task-input" placeholder="Create a new todo..." />
         <button class="checkmark"></button>
       </form>
       <div class="tasks">
@@ -40,24 +40,42 @@
             <span class="title">Task 1</span>
             <button class="remove-task"><div class="cross"></div></button>
           </li>
-          <li class="task checked">
+          <li class="task done">
             <button class="checkmark"></button>
             <span class="title">Task 2</span>
             <button class="remove-task"><div class="cross"></div></button>
           </li>
+          <li class="task">
+            <button class="checkmark"></button>
+            <span class="title">Task 3</span>
+            <button class="remove-task"><div class="cross"></div></button>
+          </li>
+          <li class="task done">
+            <button class="checkmark"></button>
+            <span class="title">Task 4</span>
+            <button class="remove-task"><div class="cross"></div></button>
+          </li>
+          <li class="task">
+            <button class="checkmark"></button>
+            <span class="title">Task 5</span>
+            <button class="remove-task"><div class="cross"></div></button>
+          </li>
+          <li class="task done">
+            <button class="checkmark"></button>
+            <span class="title">Task 6</span>
+            <button class="remove-task"><div class="cross"></div></button>
+          </li>
         </ul>
-        <p>
+        <div class="controls">
           <span>5 items left</span>
-          <span><a href="#">Clear completed</a></span>
-        </p>
+          <ul>
+            <li><button name="all-tasks">All</button></li>
+            <li><button name="active-tasks">Active</button></li>
+            <li><button name="completed-tasks">Completed</button></li>
+          </ul>
+          <span><button name="clear-completed">Clear completed</button></span>
+        </div>
       </div>
-      <footer>
-        <ul>
-          <li>All items</li>
-          <li>Active</li>
-          <li>Completed</li>
-        </ul>
-      </footer>
     </div>
     <p>Drag and drop to reorder list</p>
 

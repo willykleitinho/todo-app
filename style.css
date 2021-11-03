@@ -14,9 +14,9 @@
   /* Dark Theme */
   --clr-bg: hsl(235, 21%, 11%);
   --clr-tasks-bg: hsl(235, 24%, 19%);
-  --clr-1: hsl(234, 39%, 85%);
-  --clr-1-hover: hsl(236, 33%, 92%);
-  --clr-2: hsl(234, 11%, 52%);
+  --clr-text-primary: hsl(234, 39%, 85%);
+  --clr-text-primary-hover: hsl(236, 33%, 92%);
+  --clr-text-secondary: hsl(234, 11%, 52%);
   --clr-3-1: hsl(233, 14%, 35%);
   --clr-3-2: hsl(237, 14%, 26%);
 
@@ -26,6 +26,9 @@
   - 400
   - 700
   */
+
+  --page-bg: url("images/bg-mobile-dark.jpg") no-repeat,
+  var(--clr-bg);
 }
 
 
@@ -41,8 +44,7 @@ html {
 
 body {
   font-family: var(--font-family);
-  background: url("images/bg-mobile-dark.jpg") no-repeat,
-            hsl(235, 21%, 11%);
+  background: var(--page-bg);
   background-size: contain;
   padding: 1.5rem;
 }
@@ -58,7 +60,7 @@ body {
 
 
 .app-container > form {
-  padding: 15px;
+  padding: 15px 20px;
 }
 
 header {
@@ -70,6 +72,10 @@ header {
   margin-bottom: 25px;
 }
 
+header > h1 {
+  font-size: 25px;
+  letter-spacing: 10px;
+}
 
 header > button {
   background: transparent;
@@ -85,7 +91,8 @@ header > button {
 
 .add-task-input {
   background: transparent;
-  color: var(--clr-1);
+  font-family: var(--font-family);
+  color: var(--clr-text-primary);
   border: 0;
   flex: 1;
   margin: 0 5px;
@@ -95,7 +102,7 @@ header > button {
 .app-container > form,
 .app-container > .tasks,
 .app-container > footer {
-  border-radius: 7px;
+  border-radius: 5px;
   background: var(--clr-tasks-bg);
 }
 
@@ -104,34 +111,28 @@ header > button {
   margin: 20px 0;
 }
 
-.tasks > ul{
+.controls ul{
   list-style: none;
 }
 
 .task {
   display: flex;
   align-items: center;
-  padding: 15px 15px;
-  border-bottom: 1px solid var(--clr-3-1);
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--clr-3-2);
 }
 
 .task .title {
+  font-size: 1rem;
   flex: 1;
-  color: white;
+  color: var(--clr-text-primary);
   margin: 0 10px;
+  cursor: grab;
+  transition: color 200ms;
 }
 
-
-.tasks > p {
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  color: var(--clr-2);
-}
-
-.tasks > p a {
-  color: var(--clr-2);
-  text-decoration: none;
+.task .title:hover {
+  color: var(--clr-text-primary-hover);
 }
 
 .checkmark {
@@ -142,16 +143,25 @@ header > button {
   display: inline-block;
   background: transparent;
 }
+.checkmark:hover {
+  /* TODO checkmark hover border*/
+  color: k;
+}
 
-.checked .checkmark {
+
+.done .checkmark {
   background: url("images/icon-check.svg") no-repeat center, 
-              linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+  linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
   border: 0;
 }
 
-.checked .title {
+.done .title {
   text-decoration: line-through;
-  color: var(--clr-2);
+  color: var(--clr-text-secondary);
+}
+
+.done .title:hover {
+  color: var(--clr-text-secondary);
 }
 
 .remove-task {
@@ -161,41 +171,93 @@ header > button {
 }
 
 .cross {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   background: url("images/icon-cross.svg") no-repeat;
 }
 
-
-footer {
-  padding: 15px;
+.controls {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--clr-text-secondary);
+  font-size: 0.9rem;
+  position: relative;
 }
 
-footer ul {
+.controls a {
+  color: var(--clr-text-secondary);
+  text-decoration: none;
+}
+
+.controls ul {
   list-style: none;
   display: flex;
   justify-content: center;
-  color: var(--clr-2);
 }
 
-footer li:first-child {
+@media screen and (max-width: 500px) {
+  .controls ul {
+    position: absolute;
+    width: 100%;
+    top: 75px;
+    left: 0;
+    padding: 15px 20px;
+    background: var(--clr-tasks-bg);
+    border-radius: 5px;
+  }
+
+  body > p {
+    position: relative;
+    top: 75px;
+  }
+
+  .attribution {
+    position: relative;
+    top: 80px;
+    margin-bottom: 10px;
+  }
+}
+
+.controls li:first-child button {
   color: var(--clr-primary);
 }
 
-footer li + li {
-  margin-left: 10px;
+.controls button {
+  color: var(--clr-text-secondary);
+  border: 0;
+  background-color: transparent;
+  font-family: var(--font-family);
+  transition: color 200ms;
+}
+
+.controls button:hover {
+  color: var(--clr-text-primary-hover);
+}
+
+.controls ul button {
+  font-weight: bold;
+}
+
+.controls li + li {
+  margin-left: 15px;
 }
 
 body > p {
   margin: 20px 0;
-  color: var(--clr-2);
+  color: var(--clr-text-secondary);
   text-align: center;
 }
 
 .attribution {
   font-size: 11px;
   text-align: center;
+  color: var(--clr-3-1);
 }
 .attribution a {
   color: hsl(228, 45%, 44%);
+}
+
+button {
+  cursor: pointer;
 }
