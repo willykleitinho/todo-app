@@ -42,15 +42,11 @@ body {
   padding: 1.5rem;
 }
 
-
-
-.sun {
+.toggler {
   width: 30px;
   height: 30px;
   background: url("images/icon-sun.svg") right no-repeat;
 }
-
-
 
 .app-container > form {
   padding: 15px 20px;
@@ -213,7 +209,7 @@ header > button {
   }
 }
 
-.controls li:first-child button {
+.controls button.selected {
   color: var(--clr-primary);
 }
 
@@ -267,4 +263,8 @@ button {
 
     --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
                 var(--clr-bg);
+}
+
+.light-theme .toggler {
+  background: url("images/icon-moon.svg") right no-repeat;
 }

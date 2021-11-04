@@ -7,7 +7,6 @@
     
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <script src="https://kit.fontawesome.com/1e3c7d6228.js" crossorigin="anonymous"></script>
 
     <link
       rel="icon"
@@ -27,51 +26,20 @@
     <div class="app-container">
       <header>
         <h1>Todo</h1>
-        <button onclick="toggleTheme()"><div class="sun"></div></button>
+        <button onclick="toggleTheme()"><div class="toggler"></div></button>
       </header>
       <form>
-        <input class="add-task-input" placeholder="Create a new todo..." />
+        <input class="add-task-input" name="title" placeholder="Create a new todo..." />
         <button class="checkmark"></button>
       </form>
       <div class="tasks">
-        <ul>
-          <li class="task">
-            <button class="checkmark"></button>
-            <span class="title">Task 1</span>
-            <button class="remove-task"><div class="cross"></div></button>
-          </li>
-          <li class="task done">
-            <button class="checkmark"></button>
-            <span class="title">Task 2</span>
-            <button class="remove-task"><div class="cross"></div></button>
-          </li>
-          <li class="task">
-            <button class="checkmark"></button>
-            <span class="title">Task 3</span>
-            <button class="remove-task"><div class="cross"></div></button>
-          </li>
-          <li class="task done">
-            <button class="checkmark"></button>
-            <span class="title">Task 4</span>
-            <button class="remove-task"><div class="cross"></div></button>
-          </li>
-          <li class="task">
-            <button class="checkmark"></button>
-            <span class="title">Task 5</span>
-            <button class="remove-task"><div class="cross"></div></button>
-          </li>
-          <li class="task done">
-            <button class="checkmark"></button>
-            <span class="title">Task 6</span>
-            <button class="remove-task"><div class="cross"></div></button>
-          </li>
-        </ul>
+        <ul id="tasks-list"></ul>
         <div class="controls">
-          <span>5 items left</span>
+          <span id="items-left">5 items left</span>
           <ul>
-            <li><button name="all-tasks">All</button></li>
-            <li><button name="active-tasks">Active</button></li>
-            <li><button name="completed-tasks">Completed</button></li>
+            <li><button name="all-tasks" data-view="all" class="selected">All</button></li>
+            <li><button name="active-tasks" data-view="active">Active</button></li>
+            <li><button name="completed-tasks" data-view="completed">Completed</button></li>
           </ul>
           <span><button name="clear-completed">Clear completed</button></span>
         </div>
