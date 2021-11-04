@@ -4,13 +4,6 @@
 
   --clr-primary: hsl(220, 98%, 61%);
 
-   /* Light Theme */
-  --VeryLightGray: hsl(0, 0%, 98%);
-  --VeryLightGrayishBlue: hsl(236, 33%, 92%);
-  --LightGrayishBlue: hsl(233, 11%, 84%);
-  --DarkGrayishBlue: hsl(236, 9%, 61%);
-  --VeryDarkGrayishBlue: hsl(235, 19%, 35%);
-
   /* Dark Theme */
   --clr-bg: hsl(235, 21%, 11%);
   --clr-tasks-bg: hsl(235, 24%, 19%);
@@ -210,6 +203,7 @@ header > button {
   body > p {
     position: relative;
     top: 75px;
+    font-size: 0.9rem;
   }
 
   .attribution {
@@ -260,4 +254,17 @@ body > p {
 
 button {
   cursor: pointer;
+}
+
+.light-theme {
+    --clr-bg: hsl(236, 33%, 92%);
+    --clr-tasks-bg: hsl(0, 0%, 98%);
+    --clr-text-primary: hsl(235, 19%, 35%);
+    --clr-text-primary-hover: hsl(236, 9%, 61%);
+    --clr-text-secondary: hsl(236, 9%, 61%);
+    --clr-3-1: hsl(236, 9%, 61%);
+    --clr-3-2: hsl(233, 11%, 84%);
+
+    --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
+                var(--clr-bg);
 }
