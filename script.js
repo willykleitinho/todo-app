@@ -169,7 +169,7 @@ window.onload = () => {
 
     // This regex matches either the task name, or a boolean.
     // eg. 'task one' or 'false'
-    for (let matched of tasks.match(/(false|true)|[\w\d ]+/gi)) {
+    for (let matched of tasks.match(/(false|true)|[\w\d' ]+/gi)) {
       if (bool) {
         todos.addTask(taskName, (matched == ' false') ? false : true);
         bool = false;
