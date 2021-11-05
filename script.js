@@ -1,15 +1,10 @@
-let todoTest = [
-  'task 1',
-  'task 2',
-  'task 3',
-  'task 4',
-  'task 5',
-  'task 6',
-  'task 7',
-  'task 8',
-  'task 9'
-];
-
+function ArrayToString(arr) {
+  let str = '';
+  for (let item of arr) {
+    str += `["${item[0]}", ${item[1]}]`;
+  }
+  return str;
+}
 
 class Tasks {
   constructor() {
@@ -18,8 +13,8 @@ class Tasks {
     this.__view = 'all';
   }
 
-  addTask(title) {
-    this.__tasks.push(new Task(this.__id++, title));
+  addTask(title, completed = false) {
+    this.__tasks.push(new Task(this.__id++, title, completed));
   }
   
   removeTask(id) {
@@ -27,7 +22,12 @@ class Tasks {
   }
 
   saveTasks() {
+    let str = '';
+    for (let task of this.__tasks) {
+      str += `["${task.title}", ${task.completed}]`;
+    }
     // TODO
+    window.localStorage.setItem('tasks', str);
   }
   
   removeCompleted() {
@@ -53,6 +53,7 @@ class Tasks {
         });
         break;
     }
+    this.saveTasks(); // TEMP
     document.getElementById('tasks-list').innerHTML = tasksHTML;
     document.getElementById('items-left').innerText = `${this.__tasks.filter(task => !task.completed).length} items left`;
   }
@@ -76,10 +77,10 @@ class Tasks {
 }
 
 class Task {
-  constructor(id, title) {
+  constructor(id, title, completed = false) {
     this.__id = id;
     this.__title = title;
-    this.__completed = false;
+    this.__completed = completed;
   }
   
   renderTask() {
@@ -116,26 +117,6 @@ function toggleTheme() {
   } else {
     document.body.className = 'light-theme';
   }
-}
-
-// TODO
-function renderTasks(tasks) {
-  console.log('updating tasks.');
-}
-
-// TODO
-function clearCompleted(tasks) {
-  return tasks.filter(task => !task.completed);
-}
-
-// TODO
-function saveTasks(tasks) {
-  console.log('saving tasks to local storage.');
-}
-
-// TODO
-function addTask(tasks) {
-  console.log('adding task.');
 }
 
 // TODO
@@ -181,10 +162,22 @@ window.onload = () => {
     input.value = '';
   });
 
-  // TEMP
-  const list = document.getElementById('tasks-list');
-  for (let task of todoTest) {
-    todos.addTask(task);
+  const tasks = window.localStorage.getItem('tasks');
+  if (tasks) {
+    let bool = false;
+    let taskName = '';
+
+    // This regex matches either the task name, or a boolean.
+    // eg. 'task one' or 'false'
+    for (let matched of tasks.match(/(false|true)|[\w\d ]+/gi)) {
+      if (bool) {
+        todos.addTask(taskName, (matched == ' false') ? false : true);
+        bool = false;
+      } else {
+        taskName = matched;
+        bool = true;
+      }
+    }
   }
   todos.renderTasks();
 }
