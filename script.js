@@ -36,26 +36,34 @@ class Tasks {
 
   renderTasks() {
     let tasksHTML = '';
+    let position = 1;
     switch (this.__view) {
       case 'all':
         this.__tasks.forEach(task => {
-          tasksHTML += task.renderTask();
+          tasksHTML += task.renderTask(position++);
         });
         break;
       case 'active':
         this.__tasks.filter(task => !task.completed).forEach(task => {
-          tasksHTML += task.renderTask();
+          tasksHTML += task.renderTask(position++);
         });
         break;
       case 'completed':
         this.__tasks.filter(task => task.completed).forEach(task => {
-          tasksHTML += task.renderTask();
+          tasksHTML += task.renderTask(position++);
         });
         break;
     }
-    this.saveTasks(); 
+    this.saveTasks();
     document.getElementById('tasks-list').innerHTML = tasksHTML;
     document.getElementById('items-left').innerText = `${this.__tasks.filter(task => !task.completed).length} items left`;
+
+    document.querySelectorAll('[draggable="true"').forEach(item => {
+      item.removeEventListener('dragstart', dragStart);
+      item.removeEventListener('dragend', dragEnd);
+      item.addEventListener('dragstart', dragStart);
+      item.addEventListener('dragend', dragEnd);
+    });
   }
 
   changeView(view) {
@@ -74,6 +82,21 @@ class Tasks {
       this.__tasks.splice(index, 1);
     }
   }
+
+  updatePositions() {
+    if (!document.getElementById('tasks-list').childElementCount) {
+      console.log('returning');
+      return;
+    }
+
+    const currentPosition = [];
+    const newTasks = [];
+    document.querySelectorAll('.task').forEach(item => {
+      newTasks.push(this.__tasks.find(task => task.id == item.dataset.id));
+    });
+    this.__tasks = newTasks;
+    this.renderTasks();
+  }
 }
 
 class Task {
@@ -83,9 +106,9 @@ class Task {
     this.__completed = completed;
   }
   
-  renderTask() {
+  renderTask(position) {
     return `
-      <li class="${this.__completed ? "task done" : "task"}" data-id="${this.__id}" draggable="true">
+      <li class="${this.__completed ? "task done" : "task"}" data-position="${position}" data-id="${this.__id}" draggable="true">
         <button class="checkmark" name="complete-task"}"></button>
         <span class="title">${this.__title}</span>
         <button class="remove-task cross" name="delete-task"></button>
@@ -180,58 +203,9 @@ window.onload = () => {
     }
   }
   todos.renderTasks();
-
-
-  // drag and drop functionality
+  
+  
   const tasksList = document.getElementById('tasks-list');
-  const dropzoneIndicator = document.createElement('li');
-  dropzoneIndicator.innerText = "Here is my new place";
-  dropzoneIndicator.classList.add('dropzone-indicator');
-  /* 
-  drag events:
-
-    dragstart       started dragging
-    drag            is dragging
-    dragend         stopped dragging
-
-    dragenter       dropzone enter
-    dragover        dropzone is dragging over
-    dragleave       dropzone exit
-    drop            dropzone dropped
-  */
-
-  document.querySelectorAll('[draggable="true"]').forEach(item => {
-    item.addEventListener('dragstart', dragStart);
-    // item.addEventListener('drag', dragging);
-    item.addEventListener('dragend', dragEnd);
-  });
-
-  const tasksListInfo = {
-    height: undefined,
-    children: undefined,
-    taskHeight: undefined
-  };
-
-  function dragStart(ev) {
-    const tasksList = document.getElementById('tasks-list');
-    if (tasksList.childElementCount < 2) {
-      console.log('false');
-      return false;
-    }
-    tasksListInfo.height = tasksList.offsetHeight;
-    tasksListInfo.children = tasksList.children.length;
-    tasksListInfo.taskHeight = Math.ceil(tasksList.offsetHeight / tasksList.children.length)
-    this.style.display = 'none';
-    tasksList.insertBefore(dropzoneIndicator, this);
-  }
-
-  function dragEnd(ev) {
-    console.log('stopped');
-    tasksList.insertBefore(this, dropzoneIndicator);
-    tasksList.removeChild(dropzoneIndicator);
-    this.style.display = 'flex';
-  }
-
   tasksList.addEventListener('dragover', function (ev) {
     ev.preventDefault();
     // offY = ev.pageY - this.offsetTop;
@@ -240,7 +214,11 @@ window.onload = () => {
     const middle = underneathElem.offsetTop + underneathElem.offsetHeight / 2;
     if (underneathElem.tagName == 'LI') {
       if (ev.pageY > middle) {
-        this.insertBefore(dropzoneIndicator, underneathElem.nextElementSibling);
+        if (sibling = underneathElem.nextElementSibling) {
+          this.insertBefore(dropzoneIndicator, underneathElem.nextElementSibling);
+        } else {
+          tasksList.appendChild(dropzoneIndicator);
+        }
       } else {
         this.insertBefore(dropzoneIndicator, underneathElem);
       }
@@ -248,3 +226,50 @@ window.onload = () => {
   });
 
 }
+
+// drag and drop functionality
+const tasksList = document.getElementById('tasks-list');
+const dropzoneIndicator = document.createElement('li');
+dropzoneIndicator.innerText = "Here is my new place";
+dropzoneIndicator.classList.add('dropzone-indicator');
+/* 
+  drag events:
+
+  dragstart       started dragging
+  drag            is dragging
+  dragend         stopped dragging
+
+  dragenter       dropzone enter
+  dragover        dropzone is dragging over
+  dragleave       dropzone exit
+  drop            dropzone dropped
+*/
+const tasksListInfo = {
+  height: undefined,
+  children: undefined,
+  taskHeight: undefined
+};
+
+function dragStart(ev) {
+  const tasksList = document.getElementById('tasks-list');
+  if (tasksList.childElementCount < 2) {
+    console.log('false');
+    return false;
+  }
+  tasksListInfo.height = tasksList.offsetHeight;
+  tasksListInfo.children = tasksList.children.length;
+  tasksListInfo.taskHeight = Math.ceil(tasksList.offsetHeight / tasksList.children.length)
+  this.style.display = 'none';
+  tasksList.insertBefore(dropzoneIndicator, this);
+}
+
+function dragEnd(ev) {
+  const tasksList = document.getElementById('tasks-list');
+  console.log('stopped');
+  tasksList.insertBefore(this, dropzoneIndicator);
+  tasksList.removeChild(dropzoneIndicator);
+  this.style.display = 'flex';
+  todos.updatePositions();
+}
+
+
