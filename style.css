@@ -268,3 +268,11 @@ button {
 .light-theme .toggler {
   background: url("images/icon-moon.svg") right no-repeat;
 }
+
+.dropzone-indicator {
+  list-style: none;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  background: var(--clr-primary);
+}

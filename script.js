@@ -53,14 +53,14 @@ class Tasks {
         });
         break;
     }
-    this.saveTasks(); // TEMP
+    this.saveTasks(); 
     document.getElementById('tasks-list').innerHTML = tasksHTML;
     document.getElementById('items-left').innerText = `${this.__tasks.filter(task => !task.completed).length} items left`;
   }
 
   changeView(view) {
-    document.querySelector(`[data-view="${this.__view}"]`).className = '';
     document.querySelector(`[data-view="${view}"]`).className = 'selected';
+    document.querySelector(`[data-view="${this.__view}"]`).className = '';
     this.__view = view;
   }
 
@@ -85,10 +85,10 @@ class Task {
   
   renderTask() {
     return `
-      <li class="${this.__completed ? "task done" : "task"}">
-        <button class="checkmark" name="complete-task" data-id="${this.__id}"></button>
+      <li class="${this.__completed ? "task done" : "task"}" data-id="${this.__id}" draggable="true">
+        <button class="checkmark" name="complete-task"}"></button>
         <span class="title">${this.__title}</span>
-        <button class="remove-task cross" name="delete-task" data-id="${this.__id}"></button>
+        <button class="remove-task cross" name="delete-task"></button>
       </li>
     `;
   }
@@ -137,11 +137,11 @@ const buttonActions = {
   },
   'add-task': 'add-task',
   'delete-task': (elem) => {
-    todos.removeTask(elem.dataset.id);
+    todos.removeTask(elem.parentElement.dataset.id);
     todos.renderTasks();
   },
   'complete-task': (elem) => {
-    todos.updateTask(elem.dataset.id);
+    todos.updateTask(elem.parentElement.dataset.id);
     todos.renderTasks();
   }
 }
@@ -180,6 +180,71 @@ window.onload = () => {
     }
   }
   todos.renderTasks();
+
+
+  // drag and drop functionality
+  const tasksList = document.getElementById('tasks-list');
+  const dropzoneIndicator = document.createElement('li');
+  dropzoneIndicator.innerText = "Here is my new place";
+  dropzoneIndicator.classList.add('dropzone-indicator');
+  /* 
+  drag events:
+
+    dragstart       started dragging
+    drag            is dragging
+    dragend         stopped dragging
+
+    dragenter       dropzone enter
+    dragover        dropzone is dragging over
+    dragleave       dropzone exit
+    drop            dropzone dropped
+  */
+
+  document.querySelectorAll('[draggable="true"]').forEach(item => {
+    item.addEventListener('dragstart', dragStart);
+    // item.addEventListener('drag', dragging);
+    item.addEventListener('dragend', dragEnd);
+  });
+
+  const tasksListInfo = {
+    height: undefined,
+    children: undefined,
+    taskHeight: undefined
+  };
+
+  function dragStart(ev) {
+    const tasksList = document.getElementById('tasks-list');
+    if (tasksList.childElementCount < 2) {
+      console.log('false');
+      return false;
+    }
+    tasksListInfo.height = tasksList.offsetHeight;
+    tasksListInfo.children = tasksList.children.length;
+    tasksListInfo.taskHeight = Math.ceil(tasksList.offsetHeight / tasksList.children.length)
+    this.style.display = 'none';
+    tasksList.insertBefore(dropzoneIndicator, this);
+  }
+
+  function dragEnd(ev) {
+    console.log('stopped');
+    tasksList.insertBefore(this, dropzoneIndicator);
+    tasksList.removeChild(dropzoneIndicator);
+    this.style.display = 'flex';
+  }
+
+  tasksList.addEventListener('dragover', function (ev) {
+    ev.preventDefault();
+    // offY = ev.pageY - this.offsetTop;
+    // console.log(offY);
+    const underneathElem = document.elementFromPoint(ev.pageX, ev.pageY)
+    const middle = underneathElem.offsetTop + underneathElem.offsetHeight / 2;
+    if (underneathElem.tagName == 'LI') {
+      if (ev.pageY > middle) {
+        this.insertBefore(dropzoneIndicator, underneathElem.nextElementSibling);
+      } else {
+        this.insertBefore(dropzoneIndicator, underneathElem);
+      }
+    }
+  });
+
 }
-
-
