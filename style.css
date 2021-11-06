@@ -25,6 +25,75 @@
 }
 
 
+/* yeah prefers-color-scheme */
+@media (prefers-color-scheme: light) {
+  .light-theme {
+    --clr-bg: hsl(236, 33%, 92%);
+    --clr-tasks-bg: hsl(0, 0%, 98%);
+    --clr-text-primary: hsl(235, 19%, 35%);
+    --clr-text-primary-hover: hsl(236, 9%, 61%);
+    --clr-text-secondary: hsl(236, 9%, 61%);
+    --clr-3-1: hsl(236, 9%, 61%);
+    --clr-3-2: hsl(233, 11%, 84%);
+  
+    --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
+                var(--clr-bg);
+  }
+  
+  .light-theme .toggler {
+    background: url("images/icon-moon.svg") right no-repeat;
+  }
+}
+
+@media (prefers-color-scheme: light) and (min-width: 900px) {
+  .light-theme {
+    --page-bg:  url("images/bg-desktop-light.jpg") no-repeat,
+                var(--clr-bg);
+  }
+
+  .add-task-form,
+  .tasks {
+    box-shadow: 0 15px 30px -10px #00000044;
+  }
+}
+
+/* UTILITY CLASSES */
+.hidden {
+  border: 0;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; 
+} 
+
+/* LIGHT THEME */
+.light-theme {
+  --clr-bg: hsl(236, 33%, 92%);
+  --clr-tasks-bg: hsl(0, 0%, 98%);
+  --clr-text-primary: hsl(235, 19%, 35%);
+  --clr-text-primary-hover: hsl(236, 9%, 61%);
+  --clr-text-secondary: hsl(236, 9%, 61%);
+  --clr-3-1: hsl(236, 9%, 61%);
+  --clr-3-2: hsl(233, 11%, 84%);
+
+  --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
+              var(--clr-bg);
+}
+
+.light-theme .toggler {
+  background: url("images/icon-moon.svg") right no-repeat;
+}
+
+/* GLOBAL STYLES */
+
+button {
+  cursor: pointer;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -40,39 +109,16 @@ body {
   background: var(--page-bg);
   background-size: contain;
   padding: 1.5rem;
+  min-height: 100vh;
 }
 
-.toggler {
-  width: 30px;
-  height: 30px;
-  background: url("images/icon-sun.svg") right no-repeat;
+.app-container {
+  max-width: 540px;
+  margin: auto;
 }
 
-.app-container > form {
+.add-task-form {
   padding: 15px 20px;
-}
-
-header {
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  text-transform: uppercase;
-  margin-top: 20px;
-  margin-bottom: 25px;
-}
-
-header > h1 {
-  font-size: 25px;
-  letter-spacing: 10px;
-}
-
-header > button {
-  background: transparent;
-  color: white;
-  border: 0;
-}
-
-.app-container > form {
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
@@ -86,11 +132,39 @@ header > button {
   flex: 1;
   margin: 0 5px;
   padding: 5px;
+  border-bottom: 1px solid transparent;
+  outline: 0;
 }
 
-.app-container > form,
-.app-container > .tasks,
-.app-container > footer {
+.add-task-input:focus {
+  border-color: var(--clr-text-primary);
+}
+
+header {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+header .title {
+  font-size: 25px;
+  letter-spacing: 10px;
+}
+
+header .toggler {
+  background: transparent;
+  color: white;
+  border: 0;
+  width: 30px;
+  height: 30px;
+  background: url("images/icon-sun.svg") right no-repeat;
+}
+
+.add-task-form,
+.tasks {
   border-radius: 5px;
   background: var(--clr-tasks-bg);
 }
@@ -100,8 +174,12 @@ header > button {
   margin: 20px 0;
 }
 
-.controls ul{
+.dropzone-indicator {
   list-style: none;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  background: var(--clr-primary);
 }
 
 .task {
@@ -111,13 +189,18 @@ header > button {
   border-bottom: 1px solid var(--clr-3-2);
 }
 
+/* TODO: grabbing cursor while dragging */
+
 .task .title {
   font-size: 1rem;
   flex: 1;
   color: var(--clr-text-primary);
-  margin: 0 10px;
+  margin: 0 15px;
   cursor: grab;
   transition: color 200ms;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .task .title:hover {
@@ -126,40 +209,37 @@ header > button {
 
 .checkmark {
   border: 1px solid var(--clr-3-1);
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 100px;
   display: inline-block;
   background: transparent;
 }
+
+/* TODO: checkmark hover border*/
 .checkmark:hover {
-  /* TODO checkmark hover border*/
   color: k;
 }
 
-
 .done .checkmark {
-  background: url("images/icon-check.svg") no-repeat center, 
-  linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
   border: 0;
+  background: url("images/icon-check.svg") no-repeat center, 
+              linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
 }
-
+            
 .done .title {
-  text-decoration: line-through;
   color: var(--clr-text-secondary);
+  text-decoration: line-through;
 }
 
 .done .title:hover {
   color: var(--clr-text-secondary);
 }
 
-.remove-task {
+.remove-task-button {
   display: inline-block;
   background: transparent;
   border: 0;
-}
-
-.cross {
   width: 19px;
   height: 19px;
   background: url("images/icon-cross.svg") no-repeat;
@@ -185,34 +265,6 @@ header > button {
   justify-content: center;
 }
 
-@media screen and (max-width: 500px) {
-  .controls ul {
-    position: absolute;
-    width: 100%;
-    top: 75px;
-    left: 0;
-    padding: 15px 20px;
-    background: var(--clr-tasks-bg);
-    border-radius: 5px;
-  }
-
-  body > p {
-    position: relative;
-    top: 75px;
-    font-size: 0.9rem;
-  }
-
-  .attribution {
-    position: relative;
-    top: 80px;
-    margin-bottom: 10px;
-  }
-}
-
-.controls button.selected {
-  color: var(--clr-primary);
-}
-
 .controls button {
   color: var(--clr-text-secondary);
   border: 0;
@@ -225,6 +277,10 @@ header > button {
   color: var(--clr-text-primary-hover);
 }
 
+.controls button.selected {
+  color: var(--clr-primary);
+}
+
 .controls ul button {
   font-weight: bold;
 }
@@ -233,7 +289,31 @@ header > button {
   margin-left: 15px;
 }
 
-body > p {
+@media screen and (max-width: 500px) {
+  .controls ul {
+    position: absolute;
+    width: 100%;
+    top: 75px;
+    left: 0;
+    padding: 15px 20px;
+    background: var(--clr-tasks-bg);
+    border-radius: 5px;
+  }
+
+  .bottom-tip {
+    position: relative;
+    top: 75px;
+    font-size: 0.9rem;
+  }
+
+  .attribution {
+    position: relative;
+    top: 85px;
+    margin-bottom: 10px;
+  }
+}
+
+.bottom-tip {
   margin: 20px 0;
   color: var(--clr-text-secondary);
   text-align: center;
@@ -244,27 +324,72 @@ body > p {
   text-align: center;
   color: var(--clr-3-1);
 }
+
 .attribution a {
   color: hsl(228, 45%, 44%);
 }
 
-button {
-  cursor: pointer;
-}
-
-.light-theme {
-    --clr-bg: hsl(236, 33%, 92%);
-    --clr-tasks-bg: hsl(0, 0%, 98%);
-    --clr-text-primary: hsl(235, 19%, 35%);
-    --clr-text-primary-hover: hsl(236, 9%, 61%);
-    --clr-text-secondary: hsl(236, 9%, 61%);
-    --clr-3-1: hsl(236, 9%, 61%);
-    --clr-3-2: hsl(233, 11%, 84%);
-
-    --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
+@media screen and (min-width: 900px) {
+  :root {
+    --page-bg:  url("images/bg-desktop-dark.jpg") no-repeat,
                 var(--clr-bg);
-}
+  }
 
-.light-theme .toggler {
-  background: url("images/icon-moon.svg") right no-repeat;
+  .light-theme {
+    --page-bg:  url("images/bg-desktop-light.jpg") no-repeat,
+                var(--clr-bg);
+  }
+
+  body {
+    padding: 20px;
+  }
+
+  header {
+    margin-top: 60px;
+    margin-bottom: 45px;
+  }
+
+  header .title {
+    font-size: 35px;
+    letter-spacing: 20px;
+  }
+
+  .add-task-form {
+    padding: 20px 25px;
+  }
+
+  .add-task-input {
+    margin: 0 20px;
+  }
+
+  .add-task-form,
+  .tasks {
+    box-shadow: 0 30px 40px -5px #00000088;
+  }
+
+  .light-theme .add-task-form,
+  .light-theme .tasks {
+    box-shadow: 0 15px 30px -10px #00000044;
+  }
+
+  .task {
+    padding: 20px 25px;
+  }
+
+  .task .title {
+    margin: 0 25px;
+  }
+  
+  .controls {
+    padding: 15px 20px;
+  }
+
+  .controls li + li {
+    margin-left: 20px;
+  }
+
+  .bottom-tip {
+    margin: 50px 0;
+    margin-bottom: 30px;
+  }
 }
