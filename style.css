@@ -24,6 +24,42 @@
   var(--clr-bg);
 }
 
+/* UTILITY CLASSES */
+.hidden {
+  border: 0;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; 
+} 
+
+/* LIGHT THEME */
+.light-theme {
+  --clr-bg: hsl(236, 33%, 92%);
+  --clr-tasks-bg: hsl(0, 0%, 98%);
+  --clr-text-primary: hsl(235, 19%, 35%);
+  --clr-text-primary-hover: hsl(236, 9%, 61%);
+  --clr-text-secondary: hsl(236, 9%, 61%);
+  --clr-3-1: hsl(236, 9%, 61%);
+  --clr-3-2: hsl(233, 11%, 84%);
+
+  --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
+              var(--clr-bg);
+}
+
+.light-theme .toggler {
+  background: url("images/icon-moon.svg") right no-repeat;
+}
+
+/* GLOBAL STYLES */
+
+button {
+  cursor: pointer;
+}
 
 * {
   box-sizing: border-box;
@@ -42,37 +78,8 @@ body {
   padding: 1.5rem;
 }
 
-.toggler {
-  width: 30px;
-  height: 30px;
-  background: url("images/icon-sun.svg") right no-repeat;
-}
-
-.app-container > form {
+.add-task-form {
   padding: 15px 20px;
-}
-
-header {
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  text-transform: uppercase;
-  margin-top: 20px;
-  margin-bottom: 25px;
-}
-
-header > h1 {
-  font-size: 25px;
-  letter-spacing: 10px;
-}
-
-header > button {
-  background: transparent;
-  color: white;
-  border: 0;
-}
-
-.app-container > form {
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
@@ -88,9 +95,31 @@ header > button {
   padding: 5px;
 }
 
-.app-container > form,
-.app-container > .tasks,
-.app-container > footer {
+header {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+header .title {
+  font-size: 25px;
+  letter-spacing: 10px;
+}
+
+header .toggler {
+  background: transparent;
+  color: white;
+  border: 0;
+  width: 30px;
+  height: 30px;
+  background: url("images/icon-sun.svg") right no-repeat;
+}
+
+.add-task-form,
+.tasks {
   border-radius: 5px;
   background: var(--clr-tasks-bg);
 }
@@ -100,8 +129,12 @@ header > button {
   margin: 20px 0;
 }
 
-.controls ul{
+.dropzone-indicator {
   list-style: none;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  background: var(--clr-primary);
 }
 
 .task {
@@ -111,6 +144,8 @@ header > button {
   border-bottom: 1px solid var(--clr-3-2);
 }
 
+/* TODO: grabbing cursor while dragging */
+
 .task .title {
   font-size: 1rem;
   flex: 1;
@@ -118,6 +153,9 @@ header > button {
   margin: 0 10px;
   cursor: grab;
   transition: color 200ms;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .task .title:hover {
@@ -132,34 +170,31 @@ header > button {
   display: inline-block;
   background: transparent;
 }
+
+/* TODO: checkmark hover border*/
 .checkmark:hover {
-  /* TODO checkmark hover border*/
   color: k;
 }
 
-
 .done .checkmark {
-  background: url("images/icon-check.svg") no-repeat center, 
-  linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
   border: 0;
+  background: url("images/icon-check.svg") no-repeat center, 
+              linear-gradient(135deg, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
 }
-
+            
 .done .title {
-  text-decoration: line-through;
   color: var(--clr-text-secondary);
+  text-decoration: line-through;
 }
 
 .done .title:hover {
   color: var(--clr-text-secondary);
 }
 
-.remove-task {
+.remove-task-button {
   display: inline-block;
   background: transparent;
   border: 0;
-}
-
-.cross {
   width: 19px;
   height: 19px;
   background: url("images/icon-cross.svg") no-repeat;
@@ -185,34 +220,6 @@ header > button {
   justify-content: center;
 }
 
-@media screen and (max-width: 500px) {
-  .controls ul {
-    position: absolute;
-    width: 100%;
-    top: 75px;
-    left: 0;
-    padding: 15px 20px;
-    background: var(--clr-tasks-bg);
-    border-radius: 5px;
-  }
-
-  body > p {
-    position: relative;
-    top: 75px;
-    font-size: 0.9rem;
-  }
-
-  .attribution {
-    position: relative;
-    top: 80px;
-    margin-bottom: 10px;
-  }
-}
-
-.controls button.selected {
-  color: var(--clr-primary);
-}
-
 .controls button {
   color: var(--clr-text-secondary);
   border: 0;
@@ -225,6 +232,10 @@ header > button {
   color: var(--clr-text-primary-hover);
 }
 
+.controls button.selected {
+  color: var(--clr-primary);
+}
+
 .controls ul button {
   font-weight: bold;
 }
@@ -233,7 +244,31 @@ header > button {
   margin-left: 15px;
 }
 
-body > p {
+@media screen and (max-width: 500px) {
+  .controls ul {
+    position: absolute;
+    width: 100%;
+    top: 75px;
+    left: 0;
+    padding: 15px 20px;
+    background: var(--clr-tasks-bg);
+    border-radius: 5px;
+  }
+
+  .bottom-tip {
+    position: relative;
+    top: 75px;
+    font-size: 0.9rem;
+  }
+
+  .attribution {
+    position: relative;
+    top: 85px;
+    margin-bottom: 10px;
+  }
+}
+
+.bottom-tip {
   margin: 20px 0;
   color: var(--clr-text-secondary);
   text-align: center;
@@ -244,35 +279,7 @@ body > p {
   text-align: center;
   color: var(--clr-3-1);
 }
+
 .attribution a {
   color: hsl(228, 45%, 44%);
-}
-
-button {
-  cursor: pointer;
-}
-
-.light-theme {
-    --clr-bg: hsl(236, 33%, 92%);
-    --clr-tasks-bg: hsl(0, 0%, 98%);
-    --clr-text-primary: hsl(235, 19%, 35%);
-    --clr-text-primary-hover: hsl(236, 9%, 61%);
-    --clr-text-secondary: hsl(236, 9%, 61%);
-    --clr-3-1: hsl(236, 9%, 61%);
-    --clr-3-2: hsl(233, 11%, 84%);
-
-    --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
-                var(--clr-bg);
-}
-
-.light-theme .toggler {
-  background: url("images/icon-moon.svg") right no-repeat;
-}
-
-.dropzone-indicator {
-  list-style: none;
-  color: white;
-  text-align: center;
-  padding: 10px;
-  background: var(--clr-primary);
 }
