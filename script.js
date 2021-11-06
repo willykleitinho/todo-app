@@ -57,7 +57,7 @@ class Tasks {
     this.saveTasks();
 
     document.getElementById('tasks-list').innerHTML = tasksHTML;
-    document.getElementById('items-left').innerText = `${this.__tasks.filter(task => !task.completed).length} items left`;
+    document.getElementById('items-left').innerText = `${this.__tasks.filter(task => !task.completed).length} item(s) left`;
 
     // Add drag and drop event listeners
     document.querySelectorAll('[draggable="true"').forEach(task => {
@@ -142,8 +142,10 @@ class Task {
 function toggleTheme() {
   if (document.body.className) {
     document.body.className = '';
+    window.localStorage.setItem('theme', 'dark');
   } else {
     document.body.className = 'light-theme';
+    window.localStorage.setItem('theme', 'light');
   }
 }
 
@@ -171,6 +173,13 @@ const buttonActions = {
 
 // Add event listeners when page loads
 window.onload = () => {
+  const theme = window.localStorage.getItem('theme');
+  if (theme) {
+    if (theme == 'light') {
+      document.body.className = 'light-theme';
+    }
+  }
+
   document.querySelector('.tasks').addEventListener('click', (ev) => {
     if (ev.target.tagName == 'BUTTON') {
       buttonActions[ev.target.name](ev.target);
@@ -183,7 +192,7 @@ window.onload = () => {
     const input = ev.target.querySelector('#add-task-input');
 
     if (input.value) {
-      todos.addTask(input.value.slice(0, 30));
+      todos.addTask(input.value.slice(0, 35));
       todos.renderTasks();
 
       input.value = '';

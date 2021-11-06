@@ -24,6 +24,39 @@
   var(--clr-bg);
 }
 
+
+/* yeah prefers-color-scheme */
+@media (prefers-color-scheme: light) {
+  .light-theme {
+    --clr-bg: hsl(236, 33%, 92%);
+    --clr-tasks-bg: hsl(0, 0%, 98%);
+    --clr-text-primary: hsl(235, 19%, 35%);
+    --clr-text-primary-hover: hsl(236, 9%, 61%);
+    --clr-text-secondary: hsl(236, 9%, 61%);
+    --clr-3-1: hsl(236, 9%, 61%);
+    --clr-3-2: hsl(233, 11%, 84%);
+  
+    --page-bg:  url("images/bg-mobile-light.jpg") no-repeat,
+                var(--clr-bg);
+  }
+  
+  .light-theme .toggler {
+    background: url("images/icon-moon.svg") right no-repeat;
+  }
+}
+
+@media (prefers-color-scheme: light) and (min-width: 900px) {
+  .light-theme {
+    --page-bg:  url("images/bg-desktop-light.jpg") no-repeat,
+                var(--clr-bg);
+  }
+
+  .add-task-form,
+  .tasks {
+    box-shadow: 0 15px 30px -10px #00000044;
+  }
+}
+
 /* UTILITY CLASSES */
 .hidden {
   border: 0;
@@ -76,6 +109,12 @@ body {
   background: var(--page-bg);
   background-size: contain;
   padding: 1.5rem;
+  min-height: 100vh;
+}
+
+.app-container {
+  max-width: 540px;
+  margin: auto;
 }
 
 .add-task-form {
@@ -93,6 +132,12 @@ body {
   flex: 1;
   margin: 0 5px;
   padding: 5px;
+  border-bottom: 1px solid transparent;
+  outline: 0;
+}
+
+.add-task-input:focus {
+  border-color: var(--clr-text-primary);
 }
 
 header {
@@ -150,7 +195,7 @@ header .toggler {
   font-size: 1rem;
   flex: 1;
   color: var(--clr-text-primary);
-  margin: 0 10px;
+  margin: 0 15px;
   cursor: grab;
   transition: color 200ms;
   white-space: nowrap;
@@ -164,8 +209,8 @@ header .toggler {
 
 .checkmark {
   border: 1px solid var(--clr-3-1);
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 100px;
   display: inline-block;
   background: transparent;
@@ -282,4 +327,69 @@ header .toggler {
 
 .attribution a {
   color: hsl(228, 45%, 44%);
+}
+
+@media screen and (min-width: 900px) {
+  :root {
+    --page-bg:  url("images/bg-desktop-dark.jpg") no-repeat,
+                var(--clr-bg);
+  }
+
+  .light-theme {
+    --page-bg:  url("images/bg-desktop-light.jpg") no-repeat,
+                var(--clr-bg);
+  }
+
+  body {
+    padding: 20px;
+  }
+
+  header {
+    margin-top: 60px;
+    margin-bottom: 45px;
+  }
+
+  header .title {
+    font-size: 35px;
+    letter-spacing: 20px;
+  }
+
+  .add-task-form {
+    padding: 20px 25px;
+  }
+
+  .add-task-input {
+    margin: 0 20px;
+  }
+
+  .add-task-form,
+  .tasks {
+    box-shadow: 0 30px 40px -5px #00000088;
+  }
+
+  .light-theme .add-task-form,
+  .light-theme .tasks {
+    box-shadow: 0 15px 30px -10px #00000044;
+  }
+
+  .task {
+    padding: 20px 25px;
+  }
+
+  .task .title {
+    margin: 0 25px;
+  }
+  
+  .controls {
+    padding: 15px 20px;
+  }
+
+  .controls li + li {
+    margin-left: 20px;
+  }
+
+  .bottom-tip {
+    margin: 50px 0;
+    margin-bottom: 30px;
+  }
 }
