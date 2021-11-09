@@ -113,9 +113,9 @@ class Task {
   renderTask(position) {
     return `
       <li class="${this.__completed ? "task done" : "task"}" data-position="${position}" data-id="${this.__id}" draggable="true">
-        <button class="checkmark" name="complete-task"}"></button>
+        <button class="checkmark" name="complete-task"}"><span class="hidden">Update task state</span></button>
         <span class="title">${this.__title}</span>
-        <button class="remove-task-button" name="delete-task"></button>
+        <button class="remove-task-button" name="delete-task"><span class="hidden">Delete task</span></button>
       </li>
     `;
   }
